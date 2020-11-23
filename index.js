@@ -6,11 +6,8 @@ class MyArray extends Array {
       this
       .slice(foundFirst + 1)
       .findIndex(callback);
-      if (foundSecond > -1) {
-        return undefined;
-      } else {
-        return this[foundFirst];
-      }
+      
+      return foundSecond > -1 ? undefined : this[foundFirst];
     }
     return undefined;
   }
@@ -21,3 +18,19 @@ console.log(
   .of(1, 2, 14, 15)
   .singleOrDefault((element) => element > 13)
 );
+
+
+function wrapped(arr) {
+  return {
+    _data: arr,
+    get data() { 
+      return this._data;
+    },
+    set data(newArr) {
+      this._data = newArr;
+    }
+  };
+}
+
+const warr = wrapped([1, 2, 14, 15]);
+warr.data = [1, 3];
