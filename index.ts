@@ -1,8 +1,47 @@
-interface Order {
-    id: number
-    amount: number
-    country: string
+import "reflect-metadata";
+const formatMetadataKey = Symbol("format");
+
+function Entity(tableName: string) { 
+  return <T extends { new (...args: any[]): {} }>(constructor: T) => { 
+    //constructor.prototype.lucky = Math.floor(Math.random() * Math.floor(limit)
+    return class extends constructor {
+        reportingURL = "http://www...";
+    };
+  }
 }
+
+function PrimaryGeneratedColumn(columnName: string) {
+    const dbg = Reflect.metadata(formatMetadataKey, columnName);
+    return dbg;
+}
+
+function getPrimaryGeneratedColumnName(target: any, propertyKey: string) {
+  return Reflect.getMetadata(formatMetadataKey, target, propertyKey);
+}
+
+
+function Column(columnName: string) {
+    const dbg = Reflect.metadata(formatMetadataKey, columnName);
+    return dbg;
+}
+
+function getColumnName(target: any, propertyKey: string) {
+  return Reflect.getMetadata(formatMetadataKey, target, propertyKey);
+}
+
+
+@Entity("Orders")
+class Order {
+    @PrimaryGeneratedColumn("id")
+    id: number = NaN
+    
+    @Column("amount")
+    amount: number = NaN
+    
+    @Column("country")
+    country?: string
+}
+ 
 
 class EnhancedArray<T> extends Array<T>{
     protected parent?: EnhancedArray<T>;
@@ -65,9 +104,14 @@ class EnhancedArray<T> extends Array<T>{
 }
 
 const orders = new EnhancedArray<Order>();
-orders.push( { id: 0, amount: 140, country: "USA"});
-orders.push( { id: 0, amount: 120, country: "AUS"});
-orders.push( { id: 0, amount: 50, country: "JPN"});
+const order1 = new Order();
+order1.id = 0;
+order1.amount = 140;
+order1.country = "USA";
+
+orders.push(order1);
+orders.push({ id: 0, amount: 120, country: "AUS"});
+orders.push({ id: 0, amount: 50, country: "JPN"});
 
 
 console.log(
