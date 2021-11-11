@@ -79,5 +79,3 @@ console.log(
     .toSQL()
 );
 // "select * from Orders where amount > 100 and amount > 100 and country = AUS and country = JPN"
-
-// select * from Orders where amount > 100 and amount > 100 and country = AUS and country = JPN
