@@ -61,7 +61,7 @@ class EnhancedArray<T> extends Array<T>{
         if (!this.parent) {
             this.sql = `select * from Orders where ${key} > ${targetValue}`;
         } else {
-            this.sql = `and ${key} > ${targetValue}`;
+            this.sql = `and ${key} > ${typeof targetValue == typeof "" ? `'${targetValue}'` : targetValue}`;
         }
 
         return retValue;
@@ -74,7 +74,7 @@ class EnhancedArray<T> extends Array<T>{
         if (!this.parent) {
             this.sql = `select * from Orders where ${key} = ${targetValue}`;
         } else {
-            this.sql = `and ${key} = ${targetValue}`;
+            this.sql = `and ${key} = ${typeof targetValue == typeof "" ? `'${targetValue}'` : targetValue}`;
         }
 
         return retValue;
