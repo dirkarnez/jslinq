@@ -104,15 +104,11 @@ class EnhancedArray<T> extends Array<T>{
 }
 
 const orders = new EnhancedArray<Order>();
-const order1 = new Order();
-order1.id = 0;
-order1.amount = 140;
-order1.country = "USA";
-
-orders.push(order1);
-orders.push({ id: 0, amount: 120, country: "AUS"});
-orders.push({ id: 0, amount: 50, country: "JPN"});
-
+orders.push(...[
+    { id: 0, amount: 140, country: "USA"},
+    { id: 0, amount: 120, country: "AUS"},
+    { id: 0, amount: 50, country: "JPN"}
+]);
 
 console.log(
     orders
