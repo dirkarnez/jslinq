@@ -1,11 +1,24 @@
 import "reflect-metadata";
 const formatMetadataKey = Symbol("format");
+ 
+var storage = new Map();
 
 function Entity(tableName: string) { 
   return <T extends { new (...args: any[]): {} }>(constructor: T) => { 
     //constructor.prototype.lucky = Math.floor(Math.random() * Math.floor(limit)
+
+    const a = new class extends constructor {
+
+    };
+
+    storage.set(tableName, {
+        keys: Object.keys(a)
+    });
+
+  
+        // console.log(`${} ${constructor.name} ${}`);
     return class extends constructor {
-        reportingURL = "http://www...";
+   
     };
   }
 }
@@ -22,6 +35,7 @@ function getPrimaryGeneratedColumnName(target: any, propertyKey: string) {
 
 function Column(columnName: string) {
     const dbg = Reflect.metadata(formatMetadataKey, columnName);
+    debugger;
     return dbg;
 }
 
@@ -33,7 +47,11 @@ class EnhancedArray<T> extends Array<T>{
     protected parent?: EnhancedArray<T>;
     private sql: string;
 
-    constructor(...items: T[]) {
+    constructor<P extends { new (...args: any[]): {} }>(...items: T[]) {
+        type ppp = P;
+        const a: P = new class extends ppp {
+
+    };
         super(...items);
         this.sql = "";
         this.parent = undefined;
@@ -41,6 +59,7 @@ class EnhancedArray<T> extends Array<T>{
 
 
     GREATER_THAN(key: keyof T, targetValue: any): EnhancedArray<T> {
+        this.testType.
         const filtered =  this.filter(value => value[key] > targetValue);
         const retValue = new EnhancedArray<T>(...filtered);
         retValue.parent = this;
@@ -84,10 +103,15 @@ class EnhancedArray<T> extends Array<T>{
         // const aaaa: (item: T, key: keyof T) => T[K] = (item) => {
         //     console.log(key);
         // }
+
+debugger;
+        console.log(this[0]);
+        const a =accesor(this[0]);
+
         
         type TodoKeys = keyof T; // "id" | "text" | "due"
         const target: TodoKeys = { } as TodoKeys;
-        
+        debugger;
         console.log(target);
 
         // .forEach(key => {
@@ -155,6 +179,13 @@ class EnhancedArray<T> extends Array<T>{
     }
 }
 
+function A() {
+  return (target: Object, propertyKey: string | symbol) => {
+      debugger;
+      console.log(target.constructor.name, propertyKey);
+  }
+}
+
 @Entity("Orders")
 class Order {
     @PrimaryGeneratedColumn("id")
@@ -166,6 +197,9 @@ class Order {
     @Column("country")
     country?: string
 
+    @A()
+    c?: string = ""
+
     // private discounted: boolean = false;
     
     // set discounted(value: boolean) {
@@ -175,7 +209,7 @@ class Order {
 
 
 
-const orders = new EnhancedArray<Order>();
+const orders = new EnhancedArray<Order>(Order);
 orders.push(
     { id: 1, amount: 140, country: "USA"},
     { id: 2, amount: 120, country: "AUS"},
