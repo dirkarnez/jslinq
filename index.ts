@@ -47,19 +47,17 @@ class EnhancedArray<T> extends Array<T>{
     protected parent?: EnhancedArray<T>;
     private sql: string;
 
-    constructor<P extends { new (...args: any[]): {} }>(...items: T[]) {
-        type ppp = P;
-        const a: P = new class extends ppp {
+    constructor(...items: T[]) {
+        debugger;
+      super(...items);
+      this.sql = "";
+      this.parent = undefined;
 
-    };
-        super(...items);
-        this.sql = "";
-        this.parent = undefined;
+      console.log(this.toString());
+      debugger;
     }
 
-
     GREATER_THAN(key: keyof T, targetValue: any): EnhancedArray<T> {
-        this.testType.
         const filtered =  this.filter(value => value[key] > targetValue);
         const retValue = new EnhancedArray<T>(...filtered);
         retValue.parent = this;
@@ -85,33 +83,46 @@ class EnhancedArray<T> extends Array<T>{
     //     return omg;
     // }
 
-    // LESS_THAN<K extends keyof T, G extends T>(temp: T[K], accesor: (fake: G) => G[K], targetValue: any): EnhancedArray<T> {
+    LESS_THAN(accesor: (item: T) => T[keyof T], targetValue: any): EnhancedArray<T> {
     //     type Clone = {
     //         [P in keyof T]: T[P];
     //     };
 
+        const keys = Object.keys(eval(`new Order`));
+        const fakeObject = {};
+        keys.forEach(key => {
+            Object.defineProperty(fakeObject, key, {
+                get: function() { return alert(key); },
+            });
+        });
 
+
+
+        accesor(fakeObject as T);
+
+  //  const fakeGetter = eval(`const a = ${accesor.toString()}; (function () { a(); debugger;})()`)
+    debugger;
     
 
-    LESS_THAN<K extends keyof T>(accesor: (item: T) => T[K], targetValue: any): EnhancedArray<T> {
+    //LESS_THAN(accesor: (item: Required<T>) => T[K], targetValue: any): EnhancedArray<T> {
     //   const i: T = this[0];
     //    const t = accesor(i);
     //     type valueof = T[keyof T];
     // const aaaa: valueof = accesor(i);
     //     console.log(aaaa);
+
       
         // const aaaa: (item: T, key: keyof T) => T[K] = (item) => {
         //     console.log(key);
         // }
 
-debugger;
-        console.log(this[0]);
+        console.log("d" ,this[0]);
         const a =accesor(this[0]);
 
         
         type TodoKeys = keyof T; // "id" | "text" | "due"
         const target: TodoKeys = { } as TodoKeys;
-        debugger;
+    
         console.log(target);
 
         // .forEach(key => {
@@ -209,11 +220,10 @@ class Order {
 
 
 
-const orders = new EnhancedArray<Order>(Order);
-orders.push(
-    { id: 1, amount: 140, country: "USA"},
-    { id: 2, amount: 120, country: "AUS"},
-    { id: 3, amount: 50, country: "JPN"}
+const orders = new EnhancedArray<Order>(
+  { id: 1, amount: 140, country: "USA"},
+  { id: 2, amount: 120, country: "AUS"},
+  { id: 3, amount: 50, country: "JPN"}
 );
 
 // function prop<T extends object, K extends keyof T>(obj: T, key: K) {
@@ -225,7 +235,7 @@ orders.push(
 
 //prop(new Order(). )
 // orders.create(Order, e => e.);
-orders.LESS_THAN(order => order.amount, 1);
+orders.LESS_THAN(order => (order.amount + "3"), 1);
 
 // (a => a.amount, 100);
 
