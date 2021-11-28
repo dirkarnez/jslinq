@@ -110,12 +110,46 @@ orders.push(...[
     { id: 0, amount: 50, country: "JPN"}
 ]);
 
-console.log(
-    orders
-    .GREATER_THAN("amount", 100)
-    .GREATER_THAN("amount", 100)
-    .EQUAL("country", "AUS")
-    .EQUAL("country", "JPN")
-    .toSQL()
-);
+class User {
+    public name?: string;
+
+}
+
+function DB<T>(c: { new(): T; }, data: Array<T>) {
+    const proxy = new c();
+    const keys = Object.keys(proxy);
+
+    keys.forEach(key => {
+        Object.defineProperty(proxy, key, {
+            get: function() { alert(`${key} is getted`) },
+        });
+    })
+
+    return {
+        GREATER_THAN: (getter: (item: T) => T[keyof T], targetValue: any) => {
+            const a = getter(proxy);
+            const newdata = data.filter(item => getter(item) > targetValue)
+            debugger;
+        }
+    }
+}
+
+DB(
+    Order, 
+    [
+        { id: 0, amount: 140, country: "USA"},
+        { id: 0, amount: 120, country: "AUS"},
+        { id: 0, amount: 50, country: "JPN"}
+    ]
+)
+.GREATER_THAN(order => order.amount, 100);
+
+// console.log(
+//     orders
+//     .GREATER_THAN("amount", 100)
+//     .GREATER_THAN("amount", 100)
+//     .EQUAL("country", "AUS")
+//     .EQUAL("country", "JPN")
+//     .toSQL()
+// );
 // "select * from Orders where amount > 100 and amount > 100 and country = AUS and country = JPN"
